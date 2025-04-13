@@ -16,7 +16,14 @@ async function CreateTask() {
                 { name: 'Low', value: 'LOW' }
             ]
         });
-        var taskAdd = await input({ message: "Add more task/s (Y/N)? " });
+        var taskAdd = await select({
+            message: "Add more task/s?\n",
+            choices: [
+                { name: 'Yes', value: 'Y' },
+                { name: 'No', value: 'N' },
+            ]
+        })
+
         console.log();
         taskArr.push({ taskName, taskDue, taskPrio });
 
@@ -25,7 +32,7 @@ async function CreateTask() {
     } while (taskAdd != 'N' && taskAdd != 'n')
 }
 
-async function ViewTasks() {
+async function ReadTasks() {
     console.log("\n[SUMMARY OF TASKS]\n");
     console.log("".padEnd(10) + "[TASK]".padEnd(20) + "[DUE]".padEnd(15) + "[PRIORITY LVL]");
     taskArr.forEach((e, index) => {
@@ -40,8 +47,8 @@ async function ViewTasks() {
     console.log();
 }
 
-async function EditTasks() {
-    await ViewTasks();
+async function UpdateTasks() {
+    await ReadTasks();
     do {
         var taskNumber = await input({
             message: "Which task would you like to edit?\n Task Number:"
@@ -61,6 +68,29 @@ async function EditTasks() {
                     { name: 'Low', value: 'LOW' }
                 ]
             });
+        }
+    } while (taskNumber < 1 || taskNumber > taskArr.length);
+}
+
+async function DeleteTask() {
+    do {
+        var taskNumber = await input({
+            message: "Which task would you like to delete?\n Task Number:"
+        });
+        if (taskNumber < 1 || taskNumber > taskArr.length) {
+            console.log("Error! Number entered was out of bounds. Please enter another number.\n");
+        }
+        else {
+            const deleteTaskCh = await select({
+                message: "Are you sure you wish to delete this task?\n",
+                choices: [
+                    { name: 'Yes', value: 'Y' },
+                    { name: 'No', value: 'N' },
+                ]
+            })
+
+            if (deleteTaskCh === 'N')
+                break;
         }
     } while (taskNumber < 1 || taskNumber > taskArr.length);
 }
@@ -86,9 +116,9 @@ while (taskChoice != "EXIT") {
 
     switch (taskChoice) {
         case "CREATE": await CreateTask(); break;
-        case "READ": await ViewTasks(); break;
-        case "UPDATE": await EditTasks(); break;
-        case "DELETE": break;
+        case "READ": await ReadTasks(); break;
+        case "UPDATE": await UpdateTasks(); break;
+        case "DELETE": await DeleteTask(); break;
     }
 
     console.log();
