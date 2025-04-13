@@ -91,11 +91,17 @@ async function DeleteTask() {
 
             if (deleteTaskCh === 'N')
                 break;
+
+            else {
+                taskArr.splice((taskNumber - 1), 1);
+                console.log("Task deleted successfully!");
+                break;
+            }
         }
     } while (taskNumber < 1 || taskNumber > taskArr.length);
 }
 
-console.log("Good day!");
+console.log("\nGood day!");
 
 var taskChoice = "";
 while (taskChoice != "EXIT") {
@@ -119,6 +125,7 @@ while (taskChoice != "EXIT") {
         case "READ": await ReadTasks(); break;
         case "UPDATE": await UpdateTasks(); break;
         case "DELETE": await DeleteTask(); break;
+        case "EXIT": console.log("Process exited.\n"); process.exit();
     }
 
     console.log();
